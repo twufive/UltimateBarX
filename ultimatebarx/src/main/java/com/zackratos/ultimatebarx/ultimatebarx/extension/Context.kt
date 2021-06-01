@@ -2,6 +2,7 @@ package com.zackratos.ultimatebarx.ultimatebarx.extension
 
 import android.content.Context
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Point
 import android.os.Build
 import android.util.DisplayMetrics
@@ -18,8 +19,15 @@ import androidx.core.content.ContextCompat
  * @Describe :
  */
 
-private fun Context.getBarHeight(name: String): Int
-        = resources.getDimensionPixelSize(resources.getIdentifier(name, "dimen", "android"))
+//private fun Context.getBarHeight(name: String): Int
+//        = resources.getDimensionPixelSize(resources.getIdentifier(name, "dimen", "android"))
+private fun Context.getBarHeight(name: String): Int {
+    val height1 = resources.getDimensionPixelSize(resources.getIdentifier(name, "dimen", "android"))
+    val height2 = Resources.getSystem()
+        .getDimensionPixelSize(Resources.getSystem().getIdentifier(name, "dimen", "android"))
+    return if (height1 > height2) height1 else height2
+}
+
 
 internal val Context.statusBarHeight: Int
     get() = getBarHeight("status_bar_height")
@@ -31,7 +39,8 @@ internal val Context.landscape: Boolean
     get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
 @ColorInt
-internal fun Context.getColorInt(@ColorRes colorRes: Int): Int = ContextCompat.getColor(this, colorRes)
+internal fun Context.getColorInt(@ColorRes colorRes: Int): Int =
+    ContextCompat.getColor(this, colorRes)
 
 internal val Context.screenHeight: Int
     @RequiresApi(Build.VERSION_CODES.KITKAT)
